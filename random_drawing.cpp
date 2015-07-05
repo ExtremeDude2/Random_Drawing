@@ -40,31 +40,33 @@ void fillBoard(void)
 }
 
 // Print the board
-void printBoard(void)
+void printBoard(FILE * stream)
 {
 	unsigned int x, y;
+
 	for (y = 0; y < HEIGHT; y++)
 	{
 		if (y == 0) {}
-		//else
-		//	putchar('\n');
+//		else
+//			fputc('\n', stream);
 
 		for (x = 0; x < WIDTH; x++)
-			putchar(board[y][x]);
+			fputc(board[y][x], stream);
 	}
 }
 
-
-// Add code to save "picture" (.txt) to file
-void saveToFile(void)
+int main(int argc, char* argv[])
 {
-	return;
-}
-
-
-int main()
-{
+	FILE * stream;
 	unsigned int running = 1;
+
+	if (argc < 2)
+		stream = stdout; /* All drawings are done to the console buffer. */
+	else
+		stream = fopen(argv[1], "w"); /* Drawings are saved to a text file. */
+
+	if (stream == NULL)
+		stream = stdout;
 
 	do
 	{
@@ -72,29 +74,7 @@ int main()
 		fillBoard();
 
 		// Print the board
-		printBoard();
-
-		// Ask user if they want to save the "picture" to a file
-		printf("Would you like to save the current picture to a file? Y/N: ");
-		do
-		{
-			std::cin >> save;
-
-			if ((save | 0x20) == 'y')
-			{
-				saveToFile();
-				printf("File saved as \"random_drawing.txt\" in same folder as the program.\n");
-				break;
-			}
-			else if ((save | 0x20) == 'n')
-			{
-				break;
-			}
-			else
-			{
-				printf("Error, unknown input, please try again: ");
-			}
-		} while (1);
+		printBoard(stream);
 
 		// Ask user if they want to create another "picture"
 		printf("Would you like to create a new picture? Y/N: ");
